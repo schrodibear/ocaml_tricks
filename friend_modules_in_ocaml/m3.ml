@@ -20,10 +20,8 @@ module Make (M1_intf : Sigs.Intf) (M2_intf : Sigs.Intf) = struct
         Printf.printf "M3 called from main\n"
     end
 
-    type _ accessor =
-      | I'm_M1 : M1_intf.wit -> (module M3_for_M1) accessor
-      | I'm_M2 : M2_intf.wit -> (module M3_for_M2) accessor
-      | I'm_main : (module M3_for_Main) accessor
+    module rec I : Common.M3 = I
+    include I
 
     let access : type a. a accessor -> a =
       function
@@ -32,5 +30,3 @@ module Make (M1_intf : Sigs.Intf) (M2_intf : Sigs.Intf) = struct
       | I'm_main -> (module M3)
   end
 end
-
-
